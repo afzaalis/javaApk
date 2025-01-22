@@ -1,0 +1,27 @@
+1. Monolithic Architecture
+Definisi: Dalam arsitektur monolitik, semua komponen aplikasi dibangun sebagai satu kesatuan (single unit). Aplikasi monolitik memiliki satu basis kode yang mencakup semua fitur.
+Ciri-ciri:
+Semua fungsi (UI, backend, database, dll.) digabungkan dalam satu aplikasi besar.
+Pengembangan dan deployment dilakukan secara terintegrasi.
+Komunikasi antar bagian aplikasi terjadi secara langsung (in-process calls).
+Keuntungan:
+Sederhana: Mudah dipahami dan dikembangkan untuk proyek kecil.
+Deployment tunggal: Hanya perlu mendistribusikan satu unit.
+Kekurangan:
+Tidak fleksibel: Sulit untuk memisahkan komponen tertentu untuk diperbaiki atau ditingkatkan.
+Skalabilitas terbatas: Tidak mendukung skalabilitas parsial. Seluruh aplikasi perlu diskalakan.
+Maintenance: Kode bisa menjadi terlalu besar dan rumit untuk dikelola.
+2. Microservices Architecture
+Definisi: Dalam arsitektur microservices, aplikasi dipecah menjadi layanan-layanan kecil yang independen, masing-masing bertanggung jawab atas satu fungsi tertentu.
+Ciri-ciri:
+Setiap layanan berjalan secara mandiri dan dapat dikembangkan, diuji, serta dideploy secara terpisah.
+Komunikasi antar layanan menggunakan protokol jaringan, seperti HTTP/REST atau gRPC.
+Layanan biasanya menggunakan database mereka sendiri (database per service).
+Keuntungan:
+Fleksibilitas pengembangan: Setiap tim dapat mengembangkan dan mengelola layanan tertentu tanpa memengaruhi bagian lain.
+Skalabilitas tinggi: Hanya layanan yang membutuhkan sumber daya lebih yang diskalakan.
+Tahan gagal (fault-tolerant): Masalah pada satu layanan tidak langsung menyebabkan seluruh aplikasi gagal.
+Kekurangan:
+Kompleksitas tinggi: Membutuhkan manajemen antar layanan yang baik.
+Overhead komunikasi: Karena komunikasi dilakukan melalui jaringan, ada latensi tambahan.
+Pengelolaan distribusi: Deployment lebih kompleks, sering kali membutuhkan container seperti Docker dan orkestrator seperti Kubernetes.
