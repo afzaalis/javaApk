@@ -1,4 +1,4 @@
-#Pengembangan Aplikasi Online Store Menggunakan Software Architecture Monolithic & Microservices
+# Pengembangan Aplikasi Online Store Menggunakan Software Architecture Monolithic 
 
 
 # Perbandingan Monolithic dan Microservices Architecture
