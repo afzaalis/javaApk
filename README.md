@@ -27,7 +27,7 @@
 
 Setiap service ini dapat berjalan di server yang berbeda dan menggunakan teknologi atau bahasa pemrograman yang berbeda (misalnya, Node.js untuk katalog produk, Python untuk pembayaran).
 
-## Kapan Menggunakan?
+## Kapan Digunakan?
 
 ### Gunakan Monolithic jika:
 - Proyek kecil hingga menengah.
