@@ -108,7 +108,7 @@ public class Registrasi extends javax.swing.JFrame {
     // Simpan ke database
     try (Connection conn = database.DatabaseConnection.getConnection()) {
         String query = "INSERT INTO users (username, password) VALUES (?, ?)";
-        var pstmt = conn.prepareStatement(query);
+        var pstmt = conn.prepareStatement(query);    
         pstmt.setString(1, username);
         pstmt.setString(2, password);
         pstmt.executeUpdate();
