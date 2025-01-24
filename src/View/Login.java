@@ -115,6 +115,8 @@ public class Login extends javax.swing.JFrame {
         if (rs.next()) {
             JOptionPane.showMessageDialog(this, "Login berhasil!", "Success", JOptionPane.INFORMATION_MESSAGE);
             // TODO: Lanjutkan ke halaman berikutnya
+            this.dispose(); // Tutup form Register
+            new HomePage().setVisible(true);
         } else {
             JOptionPane.showMessageDialog(this, "Username atau Password salah!", "Error", JOptionPane.ERROR_MESSAGE);
         }

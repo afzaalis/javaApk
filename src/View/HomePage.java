@@ -4,6 +4,21 @@
  */
 package View;
 
+import database.DatabaseConnection;
+import java.awt.GridLayout;
+import java.sql.PreparedStatement;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+
+
 /**
  *
  * @author Afzaal isnaufal
@@ -27,38 +42,244 @@ public class HomePage extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        list1 = new java.awt.List();
+        jButton1 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("List Product");
+
+        jButton1.setText("add product");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "id", "nama", "harga", "stok"
+            }
+        ));
+        jTable1.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                jTable1AncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jTable1MousePressed(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(133, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(228, 228, 228))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(list1, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(115, 115, 115))))
+                .addGap(19, 19, 19)
+                .addComponent(jButton1)
+                .addGap(219, 219, 219)
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(156, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(154, 154, 154))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(43, 43, 43)
-                .addComponent(jLabel1)
-                .addGap(20, 20, 20)
-                .addComponent(list1, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(70, Short.MAX_VALUE))
+                .addGap(36, 36, 36)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1)
+                    .addComponent(jButton1))
+                .addGap(53, 53, 53)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(113, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        this.dispose(); 
+        new AddProduct().setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTable1AncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jTable1AncestorAdded
+     DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();
+
+    tableModel.setRowCount(0);
+
+    try (Connection conn = DatabaseConnection.getConnection()) {
+        String query = "SELECT * FROM produk";
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(query);
+
+        // Masukkan data ke dalam JTable
+        while (rs.next()) {
+            tableModel.addRow(new Object[]{
+                rs.getInt("id"),                
+                rs.getString("nama_produk"),    
+                rs.getDouble("harga"),          
+                rs.getInt("stok")              
+            });
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Gagal memuat data produk.");
+    }
+    }//GEN-LAST:event_jTable1AncestorAdded
+
+
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+     int row = jTable1.getSelectedRow();
+    
+    if (row != -1) {
+        int id = (int) jTable1.getValueAt(row, 0); 
+
+        String[] options = {"Edit", "Delete"};
+        int choice = JOptionPane.showOptionDialog(
+                null, "Pilih tindakan:", "Tindakan Produk", 
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, 
+                null, options, options[0]);
+
+        if (choice == 0) {
+            editProduct(id); 
+        } else if (choice == 1) {
+            deleteProduct(id); 
+        }
+    }
+     }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jTable1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTable1MousePressed
+
+    
+    private void editProduct(int productId) {
+    // Ambil data produk berdasarkan ID dari database
+    try (Connection conn = DatabaseConnection.getConnection()) {
+        String query = "SELECT * FROM produk WHERE id = ?";
+        PreparedStatement ps = conn.prepareStatement(query);
+        ps.setInt(1, productId);
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            String nama = rs.getString("nama_produk");
+            double harga = rs.getDouble("harga");
+            int stok = rs.getInt("stok");
+
+            // Tampilkan form atau dialog untuk edit data produk
+            JTextField namaField = new JTextField(nama);
+            JTextField hargaField = new JTextField(String.valueOf(harga));
+            JComboBox<Integer> stokComboBox = new JComboBox<>(new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
+            stokComboBox.setSelectedItem(stok);
+
+            JPanel panel = new JPanel(new GridLayout(0, 2));
+            panel.add(new JLabel("Nama Produk:"));
+            panel.add(namaField);
+            panel.add(new JLabel("Harga:"));
+            panel.add(hargaField);
+            panel.add(new JLabel("Stok:"));
+            panel.add(stokComboBox);
+
+            int option = JOptionPane.showConfirmDialog(null, panel, "Edit Produk", JOptionPane.OK_CANCEL_OPTION);
+
+            if (option == JOptionPane.OK_OPTION) {
+                // Update produk ke database
+                String updatedNama = namaField.getText();
+                double updatedHarga = Double.parseDouble(hargaField.getText());
+                int updatedStok = (int) stokComboBox.getSelectedItem();
+
+                String updateQuery = "UPDATE produk SET nama_produk = ?, harga = ?, stok = ? WHERE id = ?";
+                PreparedStatement updateStmt = conn.prepareStatement(updateQuery);
+                updateStmt.setString(1, updatedNama);
+                updateStmt.setDouble(2, updatedHarga);
+                updateStmt.setInt(3, updatedStok);
+                updateStmt.setInt(4, productId);
+
+                int rowsUpdated = updateStmt.executeUpdate();
+                if (rowsUpdated > 0) {
+                    JOptionPane.showMessageDialog(null, "Produk berhasil diperbarui!");
+                    loadTableData();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Gagal memperbarui produk.");
+                }
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+    }
+}
+
+    
+    private void deleteProduct(int productId) {
+    // Konfirmasi sebelum menghapus produk
+    int confirm = JOptionPane.showConfirmDialog(null, 
+            "Apakah Anda yakin ingin menghapus produk ini?", "Konfirmasi Hapus", 
+            JOptionPane.YES_NO_OPTION);
+
+    if (confirm == JOptionPane.YES_OPTION) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String deleteQuery = "DELETE FROM produk WHERE id = ?";
+            PreparedStatement deleteStmt = conn.prepareStatement(deleteQuery);
+            deleteStmt.setInt(1, productId);
+
+            int rowsDeleted = deleteStmt.executeUpdate();
+            if (rowsDeleted > 0) {
+                JOptionPane.showMessageDialog(null, "Produk berhasil dihapus!");
+                loadTableData();
+            } else {
+                JOptionPane.showMessageDialog(null, "Gagal menghapus produk.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        }
+    }
+}
+    
+    public void loadTableData() {
+    DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();  
+    tableModel.setRowCount(0);  
+
+    try (Connection conn = DatabaseConnection.getConnection()) {
+        String query = "SELECT * FROM produk"; 
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(query);
+
+        while (rs.next()) {
+            tableModel.addRow(new Object[]{
+                rs.getInt("id"),
+                rs.getString("nama_produk"),
+                rs.getDouble("harga"),
+                rs.getInt("stok")
+            });
+        }
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    }
+}
+
 
     /**
      * @param args the command line arguments
@@ -96,7 +317,9 @@ public class HomePage extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
-    private java.awt.List list1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }
